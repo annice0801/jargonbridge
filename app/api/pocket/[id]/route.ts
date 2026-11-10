@@ -1,13 +1,14 @@
-import { requireUser } from "@/lib/auth";
 import { z } from "zod";
-import { pockets } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
+import { pocketLogs, pockets } from "@/lib/db";
 import { HttpError, parseObjectId, route } from "@/lib/http";
-import { applyFeedback } from "@/lib/leitner";
-import { toLeitner, toPocketCard } from "@/lib/pockets";
+import { toPocketCard, toSrs } from "@/lib/pockets";
 import { pocketInputSchema } from "@/lib/schemas";
+import { schedule } from "@/lib/srs";
 
 const patchSchema = z.union([
-  z.object({ feedback: z.enum(["review", "mastered"]) }),
+  // day 是使用者當地日期，用來記每日打卡。
+  z.object({ grade: z.enum(["again", "good", "easy"]), day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/) }),
   z.object({ card: pocketInputSchema }),
 ]);
 
@@ -19,18 +20,19 @@ export const PATCH = route(async (request: Request, context: RouteContext<"/api/
   const collection = await pockets();
 
   let update;
-  if ("feedback" in body) {
+  if ("grade" in body) {
     const doc = await collection.findOne({ _id, userId: user.id });
     if (!doc) throw new HttpError(404, "找不到這張口袋卡");
-    const next = applyFeedback(toLeitner(doc), body.feedback, new Date());
+    const next = schedule(toSrs(doc), body.grade, new Date());
     update = { ...next, dueAt: new Date(next.dueAt) };
+    await (await pocketLogs()).updateOne({ userId: user.id, day: body.day }, { $inc: { reviews: 1 } }, { upsert: true });
   } else {
     update = body.card;
   }
 
   const doc = await collection.findOneAndUpdate(
     { _id, userId: user.id },
-    { $set: { ...update, updatedAt: new Date() } },
+    { $set: { ...update, updatedAt: new Date() }, $unset: { box: "", mastered: "" } },
     { returnDocument: "after" },
   );
   if (!doc) throw new HttpError(404, "找不到這張口袋卡");

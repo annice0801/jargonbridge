@@ -10,6 +10,7 @@ import { KnowledgePanel } from "./KnowledgePanel";
 import { NotesPanel } from "./NotesPanel";
 import { PocketPanel } from "./PocketPanel";
 import { SourcesPanel } from "./SourcesPanel";
+import { SpecPanel } from "./SpecPanel";
 import { TermExplorerProvider } from "./TermExplorer";
 import { TranslatePanel } from "./TranslatePanel";
 
@@ -17,7 +18,8 @@ const TABS = [
   { id: "cards", label: "知識卡" },
   { id: "pocket", label: "Pocket 口袋卡" },
   { id: "coach", label: "學習教練" },
-  { id: "translate", label: "即時翻譯" },
+  { id: "translate", label: "語意編譯器" },
+  { id: "spec", label: "PRD 規格" },
   { id: "notes", label: "筆記" },
   { id: "sources", label: "我的資料" },
 ] as const;
@@ -65,7 +67,7 @@ export function App() {
           <h1 className="text-xl font-semibold tracking-tight">
             <Link href="/">JargonBridge</Link>
           </h1>
-          <p className="text-sm text-stone-500">把大白話講成大廠語言，也把術語講回人話</p>
+          <p className="text-sm text-stone-500">Communication &amp; Alignment Copilot：讓跨領域人才和研發團隊講同一種語言</p>
         </div>
         <nav aria-label="功能" className="flex max-w-full overflow-x-auto rounded-lg bg-stone-200/70 p-1">
           {TABS.map((item) => (
@@ -110,6 +112,9 @@ export function App() {
       </div>
       <div hidden={tab !== "translate"}>
         <TranslatePanel sources={sources} />
+      </div>
+      <div hidden={tab !== "spec"}>
+        <SpecPanel />
       </div>
       <div hidden={tab !== "notes"}>
         <NotesPanel active={tab === "notes"} />

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "JargonBridge",
-  description: "在大白話和專業術語之間來回翻譯的學習教練",
+  description: "Communication & Alignment Copilot：跨領域人才與研發團隊的語意對齊與交付效率系統",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -86,7 +86,18 @@ export type Track = {
   updatedAt: string;
 };
 
+export type RadarScores = { professionalism: number; businessImpact: number; cringe: number };
+
+// 評分與風險分析：原句和改寫後各打一次分，並列出踩雷的說法。
+export type ToneRadar = {
+  input: RadarScores;
+  output: RadarScores;
+  flags: { phrase: string; reason: string; replacement: string }[];
+  verdict: string;
+};
+
 export type Translation = {
+  radar: ToneRadar;
   plain: string;
   professional: string;
   betterAnswer: string;
@@ -190,11 +201,38 @@ export type PocketContent = {
 export type PocketCard = PocketContent & {
   id: string;
   experience: string;
-  origin: "ai" | "custom";
+  origin: "ai" | "custom" | "extract";
   targetRole: string;
-  box: number;
-  mastered: boolean;
+  intervalDays: number;
+  ease: number;
+  reps: number;
+  lapses: number;
   dueAt: string;
   reviewCount: number;
   createdAt: string;
 };
+
+export type PocketStreak = { today: number; goal: number; days: number };
+
+export type SpecPriority = "Must" | "Should" | "Could" | "Won't";
+
+// 標準 PRD / Jira 規格：從混亂的客戶對話整理出來的工程規格書。
+export type Spec = {
+  title: string;
+  summary: string;
+  background: string;
+  userStories: {
+    role: string;
+    goal: string;
+    benefit: string;
+    priority: SpecPriority;
+    acceptanceCriteria: { given: string; when: string; then: string }[];
+  }[];
+  definitionOfDone: string[];
+  nonFunctional: string[];
+  technicalRisks: { risk: string; impact: "high" | "medium" | "low"; mitigation: string }[];
+  outOfScope: string[];
+  openQuestions: string[];
+};
+
+export type SpecRecord = { id: string; title: string; input: string; audience: string; spec: Spec; createdAt: string };

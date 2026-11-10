@@ -4,7 +4,7 @@ import { z } from "zod";
 import { generate } from "@/lib/ai";
 import { pockets, type PocketDoc } from "@/lib/db";
 import { HttpError, route } from "@/lib/http";
-import { toPocketCard } from "@/lib/pockets";
+import { newPocketFields, toPocketCard } from "@/lib/pockets";
 import { buildSystem, pocketSetSchema } from "@/lib/prompts";
 import { objectIdString } from "@/lib/schemas";
 import { loadSources } from "@/lib/tracks";
@@ -41,10 +41,7 @@ export const POST = route(async (request: Request) => {
     experience: "",
     origin: "ai",
     targetRole: body.targetRole,
-    box: 1,
-    mastered: false,
-    dueAt: now,
-    reviewCount: 0,
+    ...newPocketFields(now),
     createdAt: now,
     updatedAt: now,
   }));

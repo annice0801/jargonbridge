@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
-import type { Feedback } from "@/lib/leitner";
+import { formatWait, type Grade } from "@/lib/srs";
 import { DEFAULT_STYLE, ROLES } from "@/lib/options";
 import type { PocketCard } from "@/lib/types";
 import { useTermOpener } from "./term-context";
@@ -45,7 +45,7 @@ export function PocketStage({
   card: PocketCard;
   active: boolean;
   countdown?: number;
-  onFeedback: (feedback: Feedback) => void;
+  onFeedback: (grade: Grade) => void;
   onSkip?: () => void;
 }) {
   const [flipped, setFlipped] = useState(false);
@@ -88,10 +88,12 @@ export function PocketStage({
         // 焦點停在其他按鈕上（例如剛點的分頁）也一樣翻牌，並擋掉按鈕原本的點擊。
         event.preventDefault();
         toggle();
-      } else if (flipped && (event.key === "1" || event.key.toLowerCase() === "r")) {
-        onFeedback("review");
-      } else if (flipped && (event.key === "2" || event.key.toLowerCase() === "m")) {
-        onFeedback("mastered");
+      } else if (flipped && event.key === "1") {
+        onFeedback("again");
+      } else if (flipped && event.key === "2") {
+        onFeedback("good");
+      } else if (flipped && event.key === "3") {
+        onFeedback("easy");
       } else if (event.key === "ArrowRight" && onSkip) {
         onSkip();
       }
@@ -140,6 +142,8 @@ export function PocketStage({
   }
 
   const meta = { style: DEFAULT_STYLE, targetRole: card.targetRole || ROLES[0] };
+  // 按鈕上顯示的「幾天後」只是預覽，用卡片的到期時間當基準，避免在畫面渲染時讀取系統時間。
+  const waitBase = new Date(card.dueAt);
 
   return (
     <div className="grid items-stretch gap-4 md:grid-cols-2">
@@ -247,26 +251,24 @@ export function PocketStage({
         </div>
 
         {/* 先保留位置，翻牌時按鈕出現不會讓畫面跳動。 */}
-        <div className={`grid grid-cols-2 gap-2 ${flipped ? "" : "invisible"}`}>
-          <button
-            type="button"
-            onClick={() => onFeedback("review")}
-            className="rounded-lg border border-orange-400 bg-orange-50 py-2.5 text-sm font-medium text-orange-800 hover:bg-orange-100"
-          >
-            再複習 Review
-          </button>
-          <button
-            type="button"
-            onClick={() => onFeedback("mastered")}
-            className="rounded-lg bg-emerald-600 py-2.5 text-sm font-medium text-white hover:bg-emerald-700"
-          >
-            已掌握 Mastered
-          </button>
+        <div className={`grid grid-cols-3 gap-2 ${flipped ? "" : "invisible"}`}>
+          {GRADES.map((grade) => (
+            <button key={grade.id} type="button" onClick={() => onFeedback(grade.id)} className={`rounded-lg py-2 text-sm font-medium leading-tight ${grade.className}`}>
+              {grade.label}
+              <span className="block text-xs font-normal opacity-80">{formatWait(card, grade.id, waitBase)}後</span>
+            </button>
+          ))}
         </div>
       </div>
     </div>
   );
 }
+
+const GRADES: { id: Grade; label: string; className: string }[] = [
+  { id: "again", label: "仍會結巴", className: "border border-rose-300 bg-rose-50 text-rose-800 hover:bg-rose-100" },
+  { id: "good", label: "普通", className: "border border-stone-300 bg-white text-stone-800 hover:bg-stone-50" },
+  { id: "easy", label: "容易", className: "bg-emerald-600 text-white hover:bg-emerald-700" },
+];
 
 const STAR_ROWS = [
   { key: "situation", letter: "S", label: "情境" },

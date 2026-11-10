@@ -1,6 +1,6 @@
 import { MongoClient, type Db, type ObjectId } from "mongodb";
 import type { CategoryId, Style } from "./options";
-import type { CardStatus, Concept, KnowledgeChapter, NoteKind, PocketContent, ProjectAnalysis, TermDiagram, TermExplanation, TrackMessage } from "./types";
+import type { Spec, CardStatus, Concept, KnowledgeChapter, NoteKind, PocketContent, ProjectAnalysis, TermDiagram, TermExplanation, TrackMessage } from "./types";
 import { HttpError } from "./http";
 
 export type SourceDoc = {
@@ -76,15 +76,22 @@ export type PocketDoc = PocketContent & {
   _id: ObjectId;
   userId: ObjectId;
   experience: string;
-  origin: "ai" | "custom";
+  origin: "ai" | "custom" | "extract";
   targetRole: string;
-  box: number;
-  mastered: boolean;
+  intervalDays: number;
+  ease: number;
+  reps: number;
+  lapses: number;
   dueAt: Date;
   reviewCount: number;
   createdAt: Date;
   updatedAt: Date;
 };
+
+// 每天的複習次數，用來算連續打卡。day 是使用者當地日期 YYYY-MM-DD。
+export type PocketLogDoc = { _id: ObjectId; userId: ObjectId; day: string; reviews: number };
+
+export type SpecDoc = { _id: ObjectId; userId: ObjectId; title: string; input: string; audience: string; spec: Spec; createdAt: Date };
 
 export type UserDoc = {
   _id: ObjectId;
@@ -113,7 +120,8 @@ function ensureIndexes(db: Db) {
     db.collection("users").createIndex({ googleSub: 1 }, { unique: true }),
     db.collection("sessions").createIndex({ tokenHash: 1 }, { unique: true }),
     db.collection("sessions").createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }),
-    ...["sources", "tracks", "notes", "decks", "pockets"].map((name) => db.collection(name).createIndex({ userId: 1 })),
+    db.collection("pocketlogs").createIndex({ userId: 1, day: 1 }, { unique: true }),
+    ...["sources", "tracks", "notes", "decks", "pockets", "specs"].map((name) => db.collection(name).createIndex({ userId: 1 })),
   ]).catch((error) => {
     cache.jargonIndexes = undefined;
     console.error("建立索引失敗", error);
@@ -145,4 +153,6 @@ export const users = async () => (await getDb()).collection<UserDoc>("users");
 export const sessions = async () => (await getDb()).collection<SessionDoc>("sessions");
 
 // 屬於個人的資料表；擁有者第一次登入時，會把登入功能上線前的資料都歸到他名下。
-export const OWNED_COLLECTIONS = ["sources", "tracks", "notes", "decks", "pockets"] as const;
+export const OWNED_COLLECTIONS = ["sources", "tracks", "notes", "decks", "pockets", "specs", "pocketlogs"] as const;
+export const pocketLogs = async () => (await getDb()).collection<PocketLogDoc>("pocketlogs");
+export const specs = async () => (await getDb()).collection<SpecDoc>("specs");

@@ -42,3 +42,13 @@ export const TECHNIQUES = {
 } as const;
 
 export type Technique = keyof typeof TECHNIQUES;
+
+// 語意編譯器的溝通對象：同一件事講給不同人聽，重點和用詞都不同。
+export const AUDIENCES = [
+  { id: "interview", label: "面試回答", guide: "對象是面試官：要有結構、有取捨、有結果，經得起追問。" },
+  { id: "sales_demo", label: "工程師向業務 Demo", guide: "對象是業務或客戶：少用技術名詞，把功能翻成客戶能感受的價值、使用情境和成效，技術細節只留一句佐證。" },
+  { id: "managing_up", label: "向上管理匯報", guide: "對象是主管或高層：結論先行，接著講對營收、成本或時程的影響、風險，以及需要對方做的決定或資源。" },
+  { id: "cross_team", label: "跨部門會議", guide: "對象是其他部門的同事：講清楚需要對方配合什麼、時間點和為什麼，避免只有自己部門懂的術語。" },
+] as const;
+
+export type AudienceId = (typeof AUDIENCES)[number]["id"];

@@ -23,7 +23,7 @@ export default function LoginPage() {
           JargonBridge
         </Link>
         <h1 className="mt-10 font-serif text-3xl leading-[1.7] font-light tracking-[0.12em]">
-          進入練習室
+          進入工作台
         </h1>
         <p className="mt-4 text-sm leading-[2] text-stone-mute">
           登入後，你上傳的資料、知識卡、學習紀錄和筆記都只屬於你的帳號。
@@ -48,7 +48,7 @@ export default function LoginPage() {
         </a>
 
         <p className="mt-8 text-xs leading-[2] text-stone-mute">
-          AI 功能需要你自己的 Anthropic API key，登入後可以在練習室右上角設定。金鑰只存在你的瀏覽器裡。
+          AI 功能需要你自己的 Anthropic API key，登入後可以在工作台右上角設定。金鑰只存在你的瀏覽器裡。
         </p>
       </div>
     </main>
