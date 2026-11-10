@@ -66,8 +66,9 @@ export function Landing() {
 
         <nav aria-label="主要" className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6 sm:px-10 lg:px-16">
           <span className="font-latin text-xl tracking-[0.08em]">JargonBridge</span>
-          <div className="flex items-center gap-5 sm:gap-8">
-            <Link href="/try" className="font-serif text-sm tracking-[0.2em] text-sumi/80 transition-colors hover:text-sumi">
+          <div className="flex items-center gap-5 whitespace-nowrap sm:gap-8">
+            {/* 手機寬度放不下兩個連結，首屏按鈕區已經有免登入體驗，這裡先藏起來 */}
+            <Link href="/try" className="hidden font-serif text-sm tracking-[0.2em] text-sumi/80 transition-colors hover:text-sumi sm:inline">
               免登入體驗
             </Link>
             <Link href="/coach" className="border-b border-sumi/40 pb-0.5 font-serif text-sm tracking-[0.2em] transition-colors hover:border-sumi">

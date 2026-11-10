@@ -71,7 +71,7 @@ export function SourcesPanel({
   }
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[380px_1fr]">
+    <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
       <form onSubmit={submit} className="space-y-3 rounded-xl border border-stone-200 bg-white p-4">
         <h2 className="font-semibold">新增資料</h2>
         <div className="flex gap-1 rounded-lg bg-stone-100 p-1">

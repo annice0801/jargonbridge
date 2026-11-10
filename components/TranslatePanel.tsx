@@ -114,7 +114,7 @@ export function TranslatePanel({ sources }: { sources: SourceSummary[] }) {
           <StylePicker value={style} onChange={setStyle} />
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <RoleInput value={targetRole} onChange={setTargetRole} />
           {sources.length > 0 && (
             <div className="text-sm text-stone-600">

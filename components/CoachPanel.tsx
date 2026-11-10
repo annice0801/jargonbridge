@@ -103,7 +103,7 @@ export function CoachPanel({
   const reviewConcept = track?.concepts.find((concept) => concept.id === reviewId);
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
+    <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside className="space-y-4">
         <button type="button" className={`${primaryButton} w-full`} onClick={() => setCreating(true)}>
           新增學習路徑
@@ -187,7 +187,7 @@ export function CoachPanel({
           </>
         ) : (
           <p className="rounded-xl border border-dashed border-stone-300 p-8 text-center text-sm text-stone-500">
-            從左邊選一條學習路徑繼續。
+            從清單選一條學習路徑繼續。
           </p>
         )}
       </main>

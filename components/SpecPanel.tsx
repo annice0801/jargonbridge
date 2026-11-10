@@ -52,7 +52,7 @@ export function SpecPanel() {
   const open = records.find((item) => item.id === openId);
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
+    <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside className="space-y-3">
         <button type="button" className={`${primaryButton} w-full`} onClick={() => setOpenId("")}>
           新的需求轉規格

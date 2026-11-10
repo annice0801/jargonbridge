@@ -72,7 +72,7 @@ export function KnowledgePanel({
   const showForm = creating || (!deck && summaries.length === 0);
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[260px_1fr]">
+    <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside className="space-y-4">
         <button type="button" className={`${primaryButton} w-full`} onClick={() => setCreating(true)}>
           產生知識卡
@@ -138,7 +138,7 @@ export function KnowledgePanel({
           />
         ) : (
           <p className="rounded-xl border border-dashed border-stone-300 p-8 text-center text-sm text-stone-500">
-            從左邊選一副知識卡繼續。
+            從清單選一副知識卡繼續。
           </p>
         )}
       </main>
@@ -304,7 +304,7 @@ function DeckView({
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex gap-1 rounded-lg bg-stone-100 p-1 sm:w-fit">
+        <div className="flex w-full gap-1 rounded-lg bg-stone-100 p-1 sm:w-fit">
           {(
             [
               ...(hasAnalysis ? [{ id: "analysis", label: "專家解析" } as const] : []),
@@ -317,13 +317,13 @@ function DeckView({
               type="button"
               aria-pressed={mode === item.id}
               onClick={() => setMode(item.id)}
-              className={`flex-1 rounded-md px-3 py-1 text-sm ${mode === item.id ? "bg-white font-medium shadow-sm" : "text-stone-600"}`}
+              className={`flex-1 rounded-md px-3 py-1 text-sm whitespace-nowrap ${mode === item.id ? "bg-white font-medium shadow-sm" : "text-stone-600"}`}
             >
               {item.label}
             </button>
           ))}
         </div>
-        <button type="button" onClick={startCoach} disabled={starting} className={primaryButton}>
+        <button type="button" onClick={startCoach} disabled={starting} className={`${primaryButton} w-full sm:w-auto`}>
           {starting ? "教練整理學習重點中…" : "交給學習教練練成自己的話"}
         </button>
         </div>
