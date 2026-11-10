@@ -1,0 +1,80 @@
+.washi {
+  background-color: var(--color-washi);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .28 0 0 0 0 .24 0 0 0 0 .2 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.sumi-ground {
+  background-color: var(--color-sumi);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .95 0 0 0 0 .88 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+[data-parallax] {
+  will-change: transform;
+}
+
+/* 沒有 JS 或要求減少動態時，內容一律直接顯示 */
+.motion-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 1.3s cubic-bezier(0.2, 0.6, 0.2, 1), transform 1.3s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+.motion-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.motion-ready .gold-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2.4s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+}
+
+.motion-ready .gold-line-late {
+  transition-delay: 1.8s;
+}
+
+.motion-ready .is-visible .gold-line {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-in {
+    animation: hero-in 1.8s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  }
+
+  .hero-in-late {
+    animation-delay: 0.5s;
+  }
+
+  .voice-text {
+    animation: voice-in 0.7s ease both;
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
+@keyframes voice-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.motion-ready .gold-fill {
+  opacity: 0;
+  transition: opacity 1.4s ease 0.2s;
+}
+
+.motion-ready .is-visible .gold-fill {
+  opacity: 1;
+}
